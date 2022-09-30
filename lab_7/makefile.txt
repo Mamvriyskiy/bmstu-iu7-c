@@ -1,0 +1,46 @@
+CFLAGS := -std=c99 -Wall -Werror -pedantic -c
+
+.PHONY: func clean unit
+
+app.exe : ./out/main.o ./out/filter_array.o ./out/work_file.o ./out/sort_array.o
+	gcc -o app.exe ./out/main.o ./out/filter_array.o ./out/work_file.o ./out/sort_array.o
+
+./out/filter_array.o : ./src/filter_array.c ./inc/error.h ./inc/filter_array.h
+	gcc $(CFLAGS) ./src/filter_array.c -o ./out/filter_array.o
+
+./out/sort_array.o : ./src/sort_array.c ./inc/error.h ./inc/sort_array.h
+	gcc $(CFLAGS) ./src/sort_array.c -o ./out/sort_array.o
+
+./out/work_file.o : ./src/work_file.c ./inc/error.h ./inc/work_file.h 
+	gcc $(CFLAGS) ./src/work_file.c -o ./out/work_file.o
+
+./out/main.o : ./src/main.c ./inc/error.h ./inc/work_file.h ./inc/sort_array.h ./inc/filter_array.h
+	gcc $(CFLAGS) ./src/main.c -o ./out/main.o
+
+unit_tests.exe : ./out/check_filter_array.o ./out/check_main.o ./out/check_sort_array.o
+	gcc -std=c99 -Wall -Werror -c $^ -o $@ -lcheck -lpthread -lrt -lsubunit -lm
+
+./out/check_filter_array.o : ./unit_tests/check_filter_array.c
+	gcc -std=c99 -Wall -Werror -c ./unit_tests/check_filter_array.c -o ./out/check_filter_array.o
+
+./out/check_main.o : ./unit_tests/check_filter_array.c ./inc/check_main.h
+	gcc -std=c99 -Wall -Werror -c ./unit_tests/check_main.c -o ./out/check_main.o
+
+./out/check_sort_array.o : ./unit_tests/check_sort_array.c
+	gcc -std=c99 -Wall -Werror -c ./unit_tests/check_sort_array.c -o ./out/check_sort_array.o
+
+func: 
+	./func_tests/scripts/func_tests.sh
+
+clean:
+	rm -f *.exe ./out/*.o ./func_tests/*.txt
+
+unit :
+	./unit_tests.exe
+
+# gcc -std=c99 -Wall -Werror -c ./unit_tests/check_filter_array.c -o ./out/check_filter_array.o
+# gcc -std=c99 -Wall -Werror -c ./unit_tests/check_main.c -o ./out/check_main.o
+# gcc -o unit_tests.exe ./out/check_main.o ./out/check_filter_array.o -lcheck -lpthread
+
+
+
