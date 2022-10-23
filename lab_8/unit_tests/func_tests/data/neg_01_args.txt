@@ -1,0 +1,1 @@
+m ./func_tests/data/neg_10_data.txt ./func_tests/data/pos_01_data.txt 
