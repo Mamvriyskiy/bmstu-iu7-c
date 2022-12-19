@@ -1,6 +1,6 @@
 CC := gcc
 FLAGS := -std=c99 -Wall -Werror -Wextra -Wfloat-equal -Wfloat-conversion -pedantic
-U_FLAGS := -lcheck -lpthread -lrt -lm
+U_FLAGS := -lcheck -lpthread -lrt -lm -lsubunit
 FUNC_VLG :=
 
 SRC_DIR := ./src

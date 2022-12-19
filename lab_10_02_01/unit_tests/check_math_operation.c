@@ -138,7 +138,10 @@ START_TEST(test_derivative_math_first_positive)
          
     if (!error)
     {
-        error = derivative_math(head);
+        polinom_t *tmp = derivative_math(head);
+        if (tmp != NULL)
+            error = NULL_POINTER;
+
         if (!error)
             error = compare_list(head, result);
     }
@@ -170,7 +173,10 @@ START_TEST(test_derivative_math_second_positive)
 
     if (!error)
     {
-        error = derivative_math(head);
+        polinom_t *tmp = derivative_math(head);
+        if (tmp != NULL)
+            error = NULL_POINTER;
+
         if (!error)
             error = compare_list(head, result);
     }
@@ -202,7 +208,10 @@ START_TEST(test_derivative_math_third_neagtive_el)
          
     if (!error)
     {
-        error = derivative_math(head);
+        polinom_t *tmp = derivative_math(head);
+        if (tmp != NULL)
+            error = NULL_POINTER;
+
         if (!error)
             error = compare_list(head, result);
     }
