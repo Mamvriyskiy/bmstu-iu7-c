@@ -17,45 +17,75 @@ int main(int args, char **argv)
             size_t count;
             error = count_quantity_number(input_file, &count);
             rewind(input_file);
+
             if (error == OK && count > 0)
             {
                 int *array = NULL;
                 array = malloc(count * sizeof(int));
-                if (array != NULL)
+                
+                if (array)
                 {
                     error = read_number_from_file(input_file, array, array + count);
+                    
+                    fclose(input_file);
+
                     if (error == OK)
                     {
-                        if (args == 3)
+                        int *pb_key_array = array;
+                        int *pe_key_array = array + count;
+                        int *p = NULL;
+
+                        if (args == 4)
                         {
-                            mysort(array, count, sizeof(int), compare);
-                            error = fill_file(argv[2], array, array + count);
-                        }
-                        else
-                        {
-                            int *pb_key_array = NULL;
-                            int *pe_key_array = NULL;
-                            error = key(array, array + count, &pb_key_array, &pe_key_array);
-                            if (error == OK)
+                            long long int suml = 0;
+                            suml = create_sum(array, array + count);
+
+                            size_t n = 0;
+                            n = count_correct_element(array, array + count, suml);
+                            
+                            if (n == 0)
                             {
-                                count = pe_key_array - pb_key_array;
-                                mysort(pb_key_array, count, sizeof(int), compare);
-                                error = fill_file(argv[2], pb_key_array, pe_key_array);
+                                error = EL_NOT_FOUND;
+                                goto out_free_array;
                             }
-                            free(pb_key_array);
+                            
+                            p = malloc(n * sizeof(int));
+
+                            if (!p)
+                            {
+                                error = NEGATIVE_MEMORY_ALLOCATION;
+                                goto out_free_array;
+                            }
+
+                            pb_key_array = p;
+                            pe_key_array = p + n;
+
+                            error = key(array, array + count, pb_key_array, suml);
                         }
+
+                        if (error == OK)
+                        {
+                            count = pe_key_array - pb_key_array;
+                            mysort(pb_key_array, count, sizeof(int), compare);
+                            error = fill_file(argv[2], pb_key_array, pe_key_array);
+                        }
+
+                        if (p)
+                            free(p);
                     }
-                    free(array);
+
+                    out_free_array:
+                        free(array);
                 }
                 else 
                     error = NEGATIVE_MEMORY_ALLOCATION;
             }
-            fclose(input_file);
         }
         else 
             error = NON_OPEN_FILE;
     }
     else 
         error = NEGATIVE_ARGS;
+    
     return error;
 }

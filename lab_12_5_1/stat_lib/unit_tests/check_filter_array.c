@@ -126,24 +126,16 @@ START_TEST(test_key_array_with_only_positive_element)
 
     int arr1_b[] = {35, 64, 235, 634, 43, 62, 35, 3124, 324};
     int *arr1_e = arr1_b + 9;
+    int suml = 4470;
 
-    int *pb_dst = NULL;
-    int *pe_dst = NULL;
+    int *pb_dst = malloc(sizeof(int));
 
     int arr2[] = {3124};
-    int len2 = 1;
 
-    rc = key(arr1_b, arr1_e, &pb_dst, &pe_dst);
+    rc = key(arr1_b, arr1_e, pb_dst, suml);
 
     if (!rc)
-    {
-        long len1 = pe_dst - pb_dst;
-
-        if (len1 != len2)
-            rc = NEGATIVE_SIZE_ARRAY;
-        else
-            rc = cmp_array(pb_dst, arr2, sizeof(arr2));
-    }
+        rc = cmp_array(pb_dst, arr2, sizeof(arr2));
 
     free(pb_dst);
 
@@ -155,27 +147,20 @@ END_TEST
 START_TEST(test_key_array_with_zero)
 {
     int rc = OK;
+
     int arr1_b[] = {0, 0, 0, 0, 0, -1};
     int *arr1_e = arr1_b + 6;
 
-    int *pb_dst = NULL;
-    int *pe_dst = NULL;
+    int suml = -1;
+
+    int *pb_dst = malloc(5 * sizeof(int));
 
     int arr2[] = {0, 0, 0, 0, 0};
-    int len2 = 5;
 
-    key(arr1_b, arr1_e, &pb_dst, &pe_dst);
+    rc = key(arr1_b, arr1_e, pb_dst, suml);
 
     if (!rc)
-    {
-        long len1 = pe_dst - pb_dst;
-
-        if (len1 != len2)
-            rc = NEGATIVE_SIZE_ARRAY;
-        else
-            rc = cmp_array(pb_dst, arr2, sizeof(arr2));
-    }
-
+        rc = cmp_array(pb_dst, arr2, sizeof(arr2));
 
     free(pb_dst);
 
@@ -187,27 +172,20 @@ END_TEST
 START_TEST(test_key_array_with_only_negative_element)
 {
     int rc = OK;
+
     int arr1_b[] = {-12, -45, -1, -34, -5};
     int *arr1_e = arr1_b + 5;
 
-    int *pb_dst = NULL;
-    int *pe_dst = NULL;
+    int suml = -97;
+
+    int *pb_dst = malloc(2 * sizeof(int));
 
     int arr2[] = {-12, -1};
-    int len2 = 2;
 
-    rc = key(arr1_b, arr1_e, &pb_dst, &pe_dst);
+    rc = key(arr1_b, arr1_e, pb_dst, suml);
 
     if (!rc)
-    {
-        long len1 = pe_dst - pb_dst;
-
-        if (len1 != len2)
-            rc = NEGATIVE_SIZE_ARRAY;
-        else
-            rc = cmp_array(pb_dst, arr2, sizeof(arr2));
-    }
-
+        rc = cmp_array(pb_dst, arr2, sizeof(arr2));
 
     free(pb_dst);
 
@@ -219,64 +197,25 @@ END_TEST
 START_TEST(test_key_array_with_mixed_element)
 {
     int rc = OK;
-    int arr1_b[] = {-12, 2, -1, 0, -5};
-    int *arr1_e = arr1_b + 5;
 
-    int *pb_dst = NULL;
-    int *pe_dst = NULL;
+    int n = 5;
+    int arr1_b[] = {-12, 2, -1, 0, -5};
+    int *arr1_e = arr1_b + n;
+
+    int suml = -16;
+
+    int *pb_dst = malloc(3 * sizeof(int));
 
     int arr2[] = {2, -1, 0};
-    int len2 = 3;
 
-    rc = key(arr1_b, arr1_e, &pb_dst, &pe_dst);
+    rc = key(arr1_b, arr1_e, pb_dst, suml);
 
     if (!rc)
-    {
-        long len1 = pe_dst - pb_dst;
-
-        if (len1 != len2)
-            rc = NEGATIVE_SIZE_ARRAY;
-        else
-            rc = cmp_array(pb_dst, arr2, sizeof(arr2));
-    }
+        rc = cmp_array(pb_dst, arr2, sizeof(arr2));
 
     free(pb_dst);
 
     ck_assert_int_eq(rc, OK);
-}
-END_TEST
-
-//Проверка на находждение элементов в массиве, длина которого равна 1
-START_TEST(test_key_array_with_one_element)
-{
-    int arr1_b[] = {1};
-    int *arr1_e = arr1_b + 1;
-
-    int *pb_dst = NULL;
-    int *pe_dst = NULL;
-
-    int rc = key(arr1_b, arr1_e, &pb_dst, &pe_dst);
-
-    free(pb_dst);
-
-    ck_assert_int_eq(rc, 7);
-}
-END_TEST
-
-//Элементы в массиве не найдены
-START_TEST(test_key_no_search_element)
-{
-    int arr1_b[] = {34, 12, -1, 34, 1234};
-    int *arr1_e = arr1_b + 5;
-
-    int *pb_dst = NULL;
-    int *pe_dst = NULL;
-
-    int rc = key(arr1_b, arr1_e, &pb_dst, &pe_dst);
-
-    free(pb_dst);
-
-    ck_assert_int_eq(rc, 7);
 }
 END_TEST
 
@@ -287,11 +226,10 @@ START_TEST(test_key_null)
     int *arr1_e = NULL;
 
     int *pb_dst = NULL;
-    int *pe_dst = NULL;
 
-    int rc = key(arr1_b, arr1_e, &pb_dst, &pe_dst);
+    int suml = 10;
 
-    free(pb_dst);
+    int rc = key(arr1_b, arr1_e, pb_dst, suml);
 
     ck_assert_int_eq(rc, 6);
 }
@@ -306,8 +244,6 @@ Suite *filter_suite()
     s = suite_create("count_correct_element");
 
     tc_neg = tcase_create("negatieves");
-    tcase_add_test(tc_neg, test_key_array_with_one_element);
-    tcase_add_test(tc_neg, test_key_no_search_element);
     tcase_add_test(tc_neg, test_key_null);
     suite_add_tcase(s, tc_neg);
 

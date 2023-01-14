@@ -37,6 +37,8 @@ int fill_file(char *name_file, const int *pb, const int *pe)
         fprintf(file, "%d ", *pb);
         pb++;
     }
+
     fclose(file);
+
     return OK;
 }
