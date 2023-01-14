@@ -4,27 +4,12 @@
 #include "ext_error.h"
 #include "key.h"
 
-int key(const int *pb_src, const int *pe_src, int **pb_dst, int **pe_dst)
+int key(const int *pb_src, const int *pe_src, int *pb_dst, long long int suml)
 {
     if (pb_src == NULL || pe_src == NULL || pb_src >= pe_src)
         return UNRIGHNT_INPUT;
-    long long int suml = 0;
-    suml = create_sum(pb_src, pe_src);
-
-    size_t n = 0;
-    n = count_correct_element(pb_src, pe_src, suml);
-    
-    if (n == 0)
-        return EL_NOT_FOUND;
-    
-    int *p = malloc(n * sizeof(int));
-
-    if (!p)
-        return NEGATIVE_MEMORY_ALLOCATION;
-
-    *pb_dst = p;
-    *pe_dst = p + n;
-    search_right_element(pb_src, pe_src, p, suml);
+        
+    search_right_element(pb_src, pe_src, pb_dst, suml);
 
     return OK;
 }

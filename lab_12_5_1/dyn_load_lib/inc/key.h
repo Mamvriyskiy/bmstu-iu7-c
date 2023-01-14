@@ -11,7 +11,7 @@
  * 
  * Данная функция осуществляет заполнение массива целыми числами с помощью фильтра
 */
-int key(const int *pb_src, const int *pe_src, int **pb_dst, int **pe_dst);
+int key(const int *pb_src, const int *pe_src, int *pb_dst, long long int suml);
 
 /**
  * Подсчет суммы элементов массива

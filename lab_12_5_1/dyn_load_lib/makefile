@@ -1,5 +1,5 @@
 CC := gcc
-FLAGS := -std=c99 -Wall -Werror -Wextra -Wfloat-equal -Wfloat-conversion -pedantic
+FLAGS := -std=c99 -Wall -Werror -Wextra -Wfloat-equal -Wfloat-conversion
 U_FLAGS := -lcheck -lpthread -lrt -lm -lsubunit
 FUNC_VLG :=
 
@@ -15,7 +15,7 @@ UNITS := $(wildcard $(UNIT_DIR)/*.c)
 SRC := $(filter-out $(SRC_DIR)/main.c, $(SRC))
 OBJ := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 OBJ_UNIT := $(patsubst $(UNIT_DIR)/%.c, $(OBJ_DIR)/%.o, $(UNITS))
-OBJ_UNIT += $(filter-out $(OBJ_DIR)/main.o, $(OBJ))
+# OBJ_UNIT += $(filter-out $(OBJ_DIR)/main.o, $(OBJ))
 
 INC_HD := -I$(INC_DIR)
 
@@ -24,13 +24,13 @@ APP = app.exe
 UNIT_TEST = unit_tests.exe
 
 $(APP) : $(OBJ) $(LIB)
-	$(CC) -Iinc $(FLAGS) ./src/main.c -o $(APP)
+	$(CC) -Iinc $(FLAGS) ./src/main.c -o $(APP) -ldl
 
 $(LIB) : $(OBJ)
-	$(CC) -shared $@ -o $^
+	$(CC) -shared $^ -o $@
 
 $(UNIT_TEST) : $(OBJ_UNIT) $(LIB)
-	$(CC) -Iinc $(OBJ_UNIT) $(LIB) -o $@ $(U_FLAGS)
+	$(CC) -Iinc $(OBJ_UNIT) -o $@ $(U_FLAGS) -ldl
 
 $(OBJ_DIR):
 	@mkdir -p $@
@@ -57,7 +57,7 @@ unit: $(UNIT_TEST)
 	./$(UNIT_TEST)
 
 clean:
-	rm -rf $(OBJ_DIR) *.exe *.txt ./func_tests/*.txt *.a;
+	rm -rf $(OBJ_DIR) *.exe *.txt ./func_tests/*.txt *.a *.so;
  
 func : 
 	./func_tests/scripts/func_tests.sh $(FUNC_FLAGS)
