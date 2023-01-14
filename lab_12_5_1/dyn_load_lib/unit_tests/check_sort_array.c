@@ -268,7 +268,7 @@ START_TEST(test_mysort_array_ascending_order_double)
     fn_mysort mysort = (fn_mysort) dlsym(lib, "mysort");
     ck_assert_ptr_ne(mysort, NULL);
 
-    mysort(arr_1, n, sizeof(arr_1[0]), compare);
+    mysort(arr_1, n, sizeof(arr_1[0]), compare_double);
     int error = cmp_array(arr_1, result_arr, sizeof(result_arr));
     
     dlclose(lib);
@@ -293,7 +293,7 @@ START_TEST(test_mysort_array_descending_order_double)
     fn_mysort mysort = (fn_mysort) dlsym(lib, "mysort");
     ck_assert_ptr_ne(mysort, NULL);
 
-    mysort(arr_1, n, sizeof(arr_1[0]), compare);
+    mysort(arr_1, n, sizeof(arr_1[0]), compare_double);
     int error = cmp_array(arr_1, result_arr, sizeof(result_arr));
     
     dlclose(lib);   
@@ -318,7 +318,7 @@ START_TEST(test_mysort_array_double)
     fn_mysort mysort = (fn_mysort) dlsym(lib, "mysort");
     ck_assert_ptr_ne(mysort, NULL);
 
-    mysort(arr_1, n, sizeof(arr_1[0]), compare);
+    mysort(arr_1, n, sizeof(arr_1[0]), compare_double);
     int error = cmp_array(arr_1, result_arr, sizeof(result_arr));
     
     dlclose(lib);
@@ -343,7 +343,7 @@ START_TEST(test_mysort_array_ascending_order_char)
     fn_mysort mysort = (fn_mysort) dlsym(lib, "mysort");
     ck_assert_ptr_ne(mysort, NULL);
 
-    mysort(arr_1, n, sizeof(arr_1[0]), compare);
+    mysort(arr_1, n, sizeof(arr_1[0]), compare_char);
     int error = cmp_array(arr_1, result_arr, sizeof(result_arr));
     
     dlclose(lib);
@@ -368,7 +368,7 @@ START_TEST(test_mysort_array_descending_order_char)
     fn_mysort mysort = (fn_mysort) dlsym(lib, "mysort");
     ck_assert_ptr_ne(mysort, NULL);
 
-    mysort(arr_1, n, sizeof(arr_1[0]), compare);
+    mysort(arr_1, n, sizeof(arr_1[0]), compare_char);
     int error = cmp_array(arr_1, result_arr, sizeof(result_arr));
     
     dlclose(lib);
@@ -393,7 +393,7 @@ START_TEST(test_mysort_array_char)
     fn_mysort mysort = (fn_mysort) dlsym(lib, "mysort");
     ck_assert_ptr_ne(mysort, NULL);
 
-    mysort(arr_1, n, sizeof(arr_1[0]), compare);
+    mysort(arr_1, n, sizeof(arr_1[0]), compare_char);
     int error = cmp_array(arr_1, result_arr, sizeof(result_arr));
     
     dlclose(lib);
