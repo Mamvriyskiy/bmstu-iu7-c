@@ -1,5 +1,5 @@
 CC := gcc
-FLAGS := -std=c99 -Wall -fPIC -Werror -Wextra -Wfloat-equal -Wfloat-conversion
+FLAGS := -std=c99 -Wall -Werror -Wextra -Wfloat-equal -Wfloat-conversion
 U_FLAGS := -lcheck -lpthread -lrt -lm -lsubunit
 FUNC_VLG :=
 
@@ -24,13 +24,13 @@ APP = app.exe
 UNIT_TEST = unit_tests.exe
 
 $(APP) : $(OBJ) $(LIB)
-	$(CC) -Iinc $(FLAGS) ./src/main.c -o $(APP) -ldl -L . -larr
+	$(CC) -Iinc $(FLAGS) ./src/main.c -o $(APP) -ldl
 
 $(LIB) : $(OBJ)
 	$(CC) -shared $^ -o $@
 
 $(UNIT_TEST) : $(OBJ_UNIT) $(LIB)
-	$(CC) -Iinc $(OBJ_UNIT) -o $@ $(U_FLAGS) -ldl -L . -larr
+	$(CC) -Iinc $(OBJ_UNIT) -o $@ $(U_FLAGS) -ldl
 
 $(OBJ_DIR):
 	@mkdir -p $@
