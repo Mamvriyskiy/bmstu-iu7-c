@@ -2,41 +2,41 @@
 #include <math.h>
 #include "search_square.h"
 
-size_t get_len(const int *arr, size_t len)
+int check_square(int num)
 {
-    size_t counter = 0;
-    for (size_t i = 0; i < len; i++)
-        if (is_square(arr[i]))
-            counter++;
-    return counter;
-}
-
-int is_square(int number)
-{
-    if (number < 0)
+    if (num < 0)
         return 0;
-    return sqrt(number) - (int) sqrt(number) <= EPS ? 1 : 0;
+    return sqrt(num) - (int) sqrt(num) <= EPS;
 }
 
-int filter(const int *src, size_t src_len, int *dst, size_t *dst_len)
+size_t create_len(const int *array, const size_t lenl)
 {
-    size_t len = get_len(src, src_len);
-    if (len > *dst_len)
+    size_t count = 0;
+    for (size_t i = 0; i < lenl; i++)
+        if (check_square(array[i]))
+            count++;
+    return count;
+}
+
+int filter(const int *array, const size_t lenl, int *tmp, size_t *tmp_lenl)
+{
+    size_t len = create_len(array, lenl);
+    if (len > *tmp_lenl)
     {
-        *dst_len = len;
-        return ERR_LEN;
+        *tmp_lenl = len;
+        return NEW_LEN;
     }
 
-    size_t counter = 0;
-    for (size_t i = 0; i < src_len; i++)
+    size_t count = 0;
+    for (size_t i = 0; i < lenl; i++)
     {
-        if (is_square(src[i]))
+        if (check_square(array[i]))
         {
-            if (counter < *dst_len)
-                dst[counter++] = src[i];
+            if (count < *tmp_lenl)
+                tmp[count++] = array[i];
         }
     }
-    *dst_len = counter;
+    *tmp_lenl = count;
     
     return OK;
 }

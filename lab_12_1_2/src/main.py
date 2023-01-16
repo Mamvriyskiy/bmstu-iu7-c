@@ -65,30 +65,65 @@ def shift_array(array, k):
 
 #Окно для поиска полных квадратов
 def new_window_filter():
-    new_window = Toplevel(root)
-    new_window.title("Поиск полных квадратов")
-    new_window.geometry("600x400")
-    new_window.configure(bg = "#443848")
+    global window
+    window = Toplevel(root)
+    window.title("Поиск полных квадратов")
+    window.geometry("600x400")
+    window.configure(bg = "#443848")
 
-    label_1 = Label(new_window, text = "Введите элементы массива через пробел:", bg = "#443848", fg = "#9730db", font = "Arial 15 bold")
+    label_1 = Label(window, text = "Введите элементы массива через пробел:", bg = "#443848", fg = "#9730db", font = "Arial 15 bold")
     label_1.place(relx = 0.18, rely = 0.10)
 
-    button_3 = Button(new_window, text = "Оценка макисмального размера", 
+    button_3 = Button(window, text = "Оценка макисмального размера", 
                         width = 30, height = 2, bg = "#f4a460", 
                         fg = "white", relief = "flat", font = "Arial 10 bold", command = make_filter_max_memory)
 
-    button_4 = Button(new_window, text = "Двойной вызов функции", 
+    button_4 = Button(window, text = "Двойной вызов функции", 
                         width = 30, height = 2, bg = "#f4a460", 
-                        fg = "white", relief = "flat", font = "Arial 10 bold")
+                        fg = "white", relief = "flat", font = "Arial 10 bold", command = make_filter_memory)
 
     button_3.place(relx = 0.05, rely = 0.60)
     button_4.place(relx = 0.55, rely = 0.60)
 
     global entry_5
-    entry_5 = Entry(new_window, width = 40)
+    entry_5 = Entry(window, width = 40)
     entry_5.place(relx = 0.25, rely = 0.20)
 
 def make_filter_max_memory():
+    tmp = entry_5.get()
+    try:
+        if (len(tmp) == 0):
+            messagebox.showerror("Ошибка", "Данные не введены!")
+        else:
+            tmp = list(map(int ,tmp.split()))
+            filter_array_max(tmp)
+    except ValueError:
+        messagebox.showerror("Ошибка", "Данные введены\n         неверно!")
+        return
+
+def filter_array_max(array):
+    src = (c_int * len(array))(*array)
+
+    arr_len_size_t = c_size_t()
+    arr_len_size_t.value = len(array)
+
+    tmp = (c_int * arr_len_size_t.value)()
+
+    tmp_len = c_size_t(len(array))
+
+    rc = _filter(src, len(array), tmp, tmp_len)
+
+    tmp = list(tmp)[:tmp_len.value]
+
+    if rc != 0:
+        messagebox.showerror("Ошибка", "Ошибка!")
+    else:
+        text = "Элемнты не найдены" if len(tmp) == 0 else f"{tmp}"
+        label_res = Label(window, text = f"Результат: {text}", bg = "#443848", fg = "#800000", font = "Arial 12 bold")
+        label_res.place(relx = 0.18, rely = 0.4)
+
+
+def make_filter_memory():
     tmp = entry_5.get()
     try:
         if (len(tmp) == 0):
@@ -108,17 +143,20 @@ def filter_array(array):
 
     tmp = (c_int * arr_len_size_t.value)()
 
-    tmp_len_size_t = (arr_len_size_t.value)()
+    tmp_len = c_size_t(0)
 
-    rc = _filter(src, arr_len_size_t, tmp, tmp_len_size_t)
+    rc = _filter(src, len(array), None, tmp_len)
 
-    print(tmp)
-    if rc != 0:
-        messagebox.showerror("Ошибка", "Ошибка!")
-    else:
-        text = "Элемнты не найдены" if len(tmp) == 0 else f"{tmp}"
-        label_res = Label(new_window, text = f"Результат: text", bg = "#443848", fg = "#800000", font = "Arial 12 bold")
-        label_res.place(relx = 0.18, rely = 0.4)
+    if (rc):
+        rc = _filter(src, len(array), tmp, tmp_len)
+        tmp = list(tmp)[:tmp_len.value]
+        if rc != 0:
+            messagebox.showerror("Ошибка", "Ошибка!")
+        else:
+            text = "Элемнты не найдены" if len(tmp) == 0 else f"{tmp}"
+            label_res = Label(window, text = f"Результат: {text}", bg = "#443848", fg = "#800000", font = "Arial 12 bold")
+            label_res.place(relx = 0.18, rely = 0.4)
+
 
 root = Tk()
 root.title("Программа")
